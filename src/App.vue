@@ -1,60 +1,91 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1></h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
-  </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+                <h1>Http</h1>
+                <div class="form-group">
+                    <label for="">Username</label>
+                    <input type="text" class="form-control" v-model="user.username">
+                </div>
+                <div class="form-group">
+                    <label for="">Email</label>
+                    <input type="text" class="form-control" v-model="user.email">
+                </div>
+                <button class="btn btn-primary" @click="submit">Submit</button>
+                <hr>
+                <button class="btn btn-primary" @click="fetchData">Get Data</button>
+                <br><br>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="u in users">{{ u.username }} - {{ u.email }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    export default {
+        data () {
+            return {
+                user: {
+                    username: '',
+                    email: ''
+                },
+                users: []
+            };
+        },
+        methods: {
+            submit() {
+                this.$http.post('', this.user)
+                    .then(response => {
+                        console.log(response)
+                    }, error => {
+                        console.log(error);
+                    });
+            },
+            fetchData() {
+                this.$http.get('')
+                    .then(response => {
+                        return response.json();
+
+                    })
+                    .then(data => {
+                        const resultArray = [];
+                        for (let key in data) {
+                            resultArray.push(data[key]);
+                        }
+                        this.users = resultArray;
+                    });
+            }
+        }
     }
-  }
-}
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    #app {
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        margin-top: 60px;
+    }
 
-h1, h2 {
-  font-weight: normal;
-}
+    h1, h2 {
+        font-weight: normal;
+    }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
+    li {
+        display: inline-block;
+        margin: 0 10px;
+    }
 
-a {
-  color: #42b983;
-}
+    a {
+        color: #42b983;
+    }
 </style>
